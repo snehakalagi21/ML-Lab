@@ -1,61 +1,28 @@
-h=['phi','phi','phi','phi','phi','phi'] 
-Data=[['Sunny','Warm','Normal','Strong','Warm','Same','Yes'],
-      ['Sunny','Warm','High','Strong','Warm','Same','Yes'],
-      ['Sunny','Warm','Normal','Strong','Warm','Same','No'],
-      ['Sunny','Warm','High','Strong','Cool','Change','Yes']
-     ]
+#all in one
+import pandas as pd
+import numpy as np
 
-def isConsistent(h,d):
-    if len(h)!=len(d)-1:
-        print('Number of attributes are not same in hypothesis.')
-        return False
-    else:
-        matched=0   
-        for i in range(len(h)):
-          
-            if ( (h[i]==d[i]) | (h[i]=='any') ):
-            
-                matched=matched+1
-       
-        if matched==len(h):
-            return True
+data = pd.read_csv('lab2.csv')
+
+target = np.array(data)[:,1]
+
+dataFrame = pd.DataFrame(data)
+
+concepts = np.array(dataFrame.iloc[:,0:-1])
+
+print(concepts)
+specific = ['?'*len(target)]
+flag = 0
+print('\n')
+for i , h  in enumerate(concepts):
+    if target[i] == 'yes':
+        if flag == 0:
+            specific = h
+            flag = 1
         else:
-            return False
-
-def makeConsistent(h,d):
-  
-    for i in range(len(h)):
-       
-        if((h[i] == 'phi')):
-           
-            h[i]=d[i]
-         
-        elif(h[i]!=d[i]):
-         
-            h[i]='any'
-   
-    return h
-
-print('Begin : Hypothesis :',h)
-print('==========================================')
-
-for d in Data:
-
-    if d[len(d)-1]=='Yes':
- 
-        if ( isConsistent(h,d)):
-      
-            print ("Hypothesis :",d)
-        else:
-           
-            h=makeConsistent(h,d)
-   
-        print ('Training data         :',d)
-        print ('Updated Hypothesis    :',h)
-        print()
-        print('--------------------------------')
-   
-print('==========================================')
-print('End: Hypothesis :',h)
+            for x in range(len(specific)):
+                if h[x] != specific[x]:
+                    specific[x] = '?'
+    print(specific)
 
 
